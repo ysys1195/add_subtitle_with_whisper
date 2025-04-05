@@ -9,6 +9,14 @@ extracted_audio_path = "audio.wav"
 output_srt_path = "subtitles.srt"
 output_video_path = "output_with_subs.mp4"
 
+# タイムスタンプのフォーマット変換（Whisperの時間 → SRT形式）
+def format_timestamp(seconds: float) -> str:
+    h = int(seconds // 3600)
+    m = int((seconds % 3600) // 60)
+    s = int(seconds % 60)
+    ms = int((seconds - int(seconds)) * 1000)
+    return f"{h:02}:{m:02}:{s:02},{ms:03}"
+
 # ステップ1：mp4 → wav
 print("🎞️ MP4 → WAV に変換中...")
 video = VideoFileClip(input_video_path)
@@ -41,12 +49,3 @@ subprocess.run([
 ])
 
 print("✅ 完了！字幕付き動画：", output_video_path)
-
-
-# タイムスタンプのフォーマット変換（Whisperの時間 → SRT形式）
-def format_timestamp(seconds: float) -> str:
-    h = int(seconds // 3600)
-    m = int((seconds % 3600) // 60)
-    s = int(seconds % 60)
-    ms = int((seconds - int(seconds)) * 1000)
-    return f"{h:02}:{m:02}:{s:02},{ms:03}"
