@@ -9,6 +9,12 @@ extracted_audio_path = "audio.wav"
 output_srt_path = "subtitles.srt"
 output_video_path = "output_with_subs.mp4"
 
+# 削除処理
+for path in [extracted_audio_path, output_srt_path, output_video_path]:
+    if os.path.exists(path):
+        os.remove(path)
+        print(f"🧹 削除しました: {path}")
+
 # タイムスタンプのフォーマット変換（Whisperの時間 → SRT形式）
 def format_timestamp(seconds: float) -> str:
     h = int(seconds // 3600)
@@ -22,10 +28,10 @@ print("🎞️ MP4 → WAV に変換中...")
 video = VideoFileClip(input_video_path)
 video.audio.write_audiofile(extracted_audio_path)
 
-# ステップ2：WAV を Whisper で日本語翻訳
-print("🗣 Whisper による日本語翻訳中...")
+# ステップ2：WAV を Whisper で文字起こし
+print("🗣 Whisper による英語文字起こし中...")
 model = whisper.load_model("base")
-result = model.transcribe(extracted_audio_path, task="translate")
+result = model.transcribe(extracted_audio_path, task="transcribe")
 
 # ステップ3：SRTファイルとして保存
 print("💬 SRT字幕を保存中...")
